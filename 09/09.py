@@ -21,15 +21,17 @@ for i,line in enumerate(lines):
         break
 
 # part 2
-numcon = 2
-while numcon < len(lines):
-    for i in range(numcon-1, len(lines)):
-        s = sum(lines[i-numcon+1:numcon+1])
+con = 2
+while con < len(lines):
+    s = sum(lines[:con])
+    for i in range(con, len(lines)):
+        s += lines[i]
+        s -= lines[i-con]
         if s == n:
-            nums = lines[i-numcon+1:numcon+1]
-            nums.sort()
-            print(nums[0] + nums[-1])
+            li = lines[i-con+1:i+1]
+            li.sort()
+            print(li[0]+li[-1])
             sys.exit()
-    numcon += 1
+    con += 1
     
 
