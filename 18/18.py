@@ -61,41 +61,28 @@ print(count)
 
 # part 2
 
+def enc(st):
+    return "(" + st + ")"
+
+def replace_all(st, regex, rfunc):
+    f = True
+    while f:
+        off = 0
+        f = False
+        for m in re.finditer(regex, st):
+            r = rfunc(m.group(1))
+            st = st[:m.start(1)+off] + r + st[m.end(1)+off:]
+            off += len(r) - len(m.group(1))
+            f = True
+    return st
+
 def ev2(st): # no parantheses guaranteed
-    f = True
-    while f:
-        off = 0
-        f = False
-        for m in re.finditer(r"\*(\d+\+\d+(\+\d+)*)", st):
-            r = "(" + m.group(1) + ")"
-            st = st[:m.start(1)+off] + r + st[m.end(1)+off:]
-            off += 2
-            f = True
-            break
-    f = True
-    while f:
-        off = 0
-        f = False
-        for m in re.finditer(r"(\d+\+\d+(\+\d+)*)\*", st):
-            r = "(" + m.group(1) + ")"
-            st = st[:m.start(1)+off] + r + st[m.end(1)+off:]
-            off += 2
-            f = True
-            break
+    st = replace_all(st, r"\*(\d+\+\d+(\+\d+)*)", enc)
+    st = replace_all(st, r"(\d+\+\d+(\+\d+)*)\*", enc)
     return eval(st)
 
 count = 0
 for line in lines:
-    found = True
-    while found:
-        offset = 0
-        found = False
-        for m in re.finditer(r"\([\d*+{}]*\)", line):
-            query = line[m.start()+1+offset:m.end()-1+offset]
-            if not query:continue
-            res = str(ev2(query))
-            line = line[:m.start()+offset] + res + line[m.end()+offset:]
-            offset += len(res)-(m.end()-m.start())
-            found = True
+    line = replace_all(line, r"(\([\d*+{}]*\))", lambda x: str(ev2(x[1:-1])))
     count += eval(str(ev2(line)))
 print(count)
