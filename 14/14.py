@@ -11,9 +11,17 @@ def masks(st):
             fl += 1<<(len(st)-i-1)
     return fl, fi
 
+def subsets(mask):
+    subset = mask
+    while subset:
+        yield subset
+        subset = mask & (subset-1)
+    yield subset
+
 floating = 0
 fixed = 0
-mem = [0 for i in range(100000)]
+mem = {} # part 1
+mem2 = {} # part 2
 for line in lines:
     var, val = line.split(" = ")
     if var == "mask":
@@ -22,28 +30,8 @@ for line in lines:
         address = int(var[4:-1])
         val = int(val)
         mem[address] = (fixed & ~floating) | (floating & val)
-print(sum(mem))
-
-# part 2
-
-def subsets(mask):
-    subset = mask
-    while subset:
-        yield subset
-        subset = mask & (subset-1)
-    yield subset
-
-floating = (1<<36)-1
-fixed = (1<<36)-1
-mem = {}
-for line in lines:
-    var, val = line.split(" = ")
-    if var == "mask":
-        floating, fixed = masks(val)
-    else:
-        address = int(var[4:-1])
-        val = int(val)
         for subset in subsets(floating):
             newaddr = subset | (~floating & (fixed | address))
-            mem[newaddr] = val
+            mem2[newaddr] = val
 print(sum(mem.values()))
+print(sum(mem2.values()))
