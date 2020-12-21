@@ -1,20 +1,19 @@
 import sys
-qq = []
-count = 0
-for inp in [x.strip() for x in sys.stdin.read().split("\n\n")]:
-    qq.append(inp)
-    questions = [x for x in list(inp) if x != "\n"]
-    count += len(set(questions))
-print(count)
 
+groups = []
+for group in sys.stdin.read().split("\n\n"):
+    answers = [a.strip() for a in group.split("\n")]
+    groups.append(answers)
+
+# part 1
+print(sum(len(set(''.join(answers))) for answers in groups))
+
+# part 2
 count = 0
-for inp in qq:
-    n = len(inp.split("\n"))
-    answers = [x for x in list(inp) if x != "\n"]
+for answers in groups:
     freq = {}
-    for a in answers:
+    for a in ''.join(answers):
         if a in freq: freq[a] += 1
         else: freq[a] = 1
-    c = sum([1 for x in freq.values() if x == n])
-    count += c
+    count += sum(1 for x in freq.values() if x == len(answers))
 print(count)
