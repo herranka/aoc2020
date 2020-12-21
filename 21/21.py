@@ -66,19 +66,12 @@ for i in range(1, len(aller)+1):
 for i in range(len(aller)+1,2*len(aller)+1):
     edges[i][-1] = True
 
-print(edges)
-
 allerlist = sorted(list(aller))
 foodlist = sorted(list(uni))
-print(foodlist)
-for a in allerlist:
-    print(possibles[a])
 for i,key in enumerate(allerlist):
     for ingredient in possibles[key]:
         j = foodlist.index(ingredient)
         edges[i+1][len(edges)//2+j] = True
-
-print(edges)
 
 while (p := find_path(edges)):
     for i in range(len(p)-1):
@@ -89,6 +82,7 @@ mapping = {}
 for i,e in enumerate(range(len(edges)//2, len(edges)-1)):
     r = edges[e].index(True) - 1
     mapping[allerlist[r]] = foodlist[i]
+
 out = []
 for al in allerlist:
     out.append(mapping[al])
