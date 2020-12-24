@@ -18,11 +18,14 @@ def move(x,y,st):
     elif st == "se":
         return [x, y+1]
 
-def flip(grid, x, y):
-    grid[x][y] = not grid[x][y]
+def flip(black, x, y):
+    if (x,y) in black:
+        black.remove((x,y))
+    else:
+        black.add((x,y))
 
-grid = [[False for i in range(100)] for j in range(100)]
 origin = [50,50]
+black = set()
 
 for line in instructions:
     i = 0
@@ -34,9 +37,11 @@ for line in instructions:
         else:
             x,y = move(x,y, line[i])
             i += 1
-    flip(grid, x, y)
+    flip(black, x, y)
 
-count = 0
-for line in grid:
-    count += line.count(True)
-print(count)
+print(len(black))
+
+# part 2
+
+def neighbours(x, y):
+    return (move(x,y,m) for m in directions)
